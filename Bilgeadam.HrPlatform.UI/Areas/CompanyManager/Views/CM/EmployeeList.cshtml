@@ -1,0 +1,298 @@
+﻿@using Bilgeadam.HrPlatform.Entities.DTOs;
+@using Bilgeadam.HrPlatform.Entities.Entities;
+@model IList<AppUser>
+@{
+    ViewData["Title"] = "Home Page";
+}
+@functions {
+    public string FormatliTelefonNumarasi(string telefonNumarasi)
+    {
+        if (telefonNumarasi.Length != 10)
+        {
+            // Telefon numarası 10 haneli olmalıdır. İsteğe göre hata kontrolü yapabilirsiniz.
+            return telefonNumarasi;
+        }
+
+        return string.Format("({0}) {1} {2} {3}",
+        telefonNumarasi.Substring(0, 3),
+        telefonNumarasi.Substring(3, 3),
+        telefonNumarasi.Substring(6, 2),
+        telefonNumarasi.Substring(8, 2));
+    }
+}
+
+@{
+    bool anyactive = false;
+    bool anyInActive = false;
+    foreach (AppUser employee in Model)
+    {
+        if (employee.Status == true)
+        {
+            anyactive = true;
+        }
+        else
+        {
+            anyInActive = true;
+        }
+    }
+}
+
+@*@if (TempData["result"] != null)
+{
+    <script>
+        alert("İşlem başarılı");
+    </script>
+}*@
+
+@*<a asp-action="Create" asp-controller="Admin" class="btn btn-secondary">Create</a>*@
+<div>
+    <div class="flip-card">
+        <div class="flip-card-inner">
+            <div class="flip-card-front">
+
+                <table class=" table table-sm table-bordered">
+                    @{
+                        if (anyactive == false)
+                        {
+                            <tr>
+                                <th>There are no active companies in the system</th>
+                            </tr>
+                        }
+                        else
+                        {
+                            <tr>
+                                <th>Profile Photo</th>
+                                <th>FirstName</th>
+                                <th>SecondName</th>
+                                <th>LastName</th>
+                                <th>SecondLastName</th>
+                                <th>Profession</th>
+                                <th>Number</th>
+                                <th>Email</th>
+                            </tr>
+                        }
+                    }
+                    @foreach (AppUser employee in Model)
+                    {
+                        if (employee.Status == true)
+                        {
+                            <tr>
+                                <td>
+                                    @{
+
+                                        <div class="form-group">
+                                            @{
+                                                string base64String = Convert.ToBase64String(employee.ProfilePhoto);
+                                                if (base64String == "")
+                                                {
+                                                    if (employee.Gender == "Male")
+                                                    {
+                                                        <img src="~/Content/assets/images/faces/default.jpg" alt="Profile Photo" style="width: 100px; height: 100px; object-fit:cover;" />
+                                                    }
+                                                    else
+                                                    {
+                                                        <img src="~/Content/assets/images/faces/defaultwomen.jpg" alt="Profile Photo" style="width: 100px; height: 100px; object-fit:cover;" />
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    <img src="data:image/jpeg;base64,@(base64String)" alt="Profile Photo" style="width: 100px; height: 100px; object-fit:cover;" />
+                                                }
+                                            }
+
+                                        </div>
+
+                                    }
+                                </td>
+                                <td>@employee.FirstName</td>
+                                <td>@employee.SecondName</td>
+                                <td>@employee.LastName</td>
+                                <td>@employee.SecondLastName</td>
+                                <td>@employee.Profession</td>
+                                <td>
+                                    <div>
+                                        <span>@FormatliTelefonNumarasi(employee.PhoneNumber)</span>
+                                    </div>
+                                </td>
+                                <td>@employee.Email</td>
+                                <td>
+                                    @*<a class="btn btn-sm btn-primary" asp-action="UpdateCompany" asp-area="SiteManager" asp-controller="Company" asp-route-id="@companyDto.Id">Update</a>*@
+                                    <form asp-route-id="@employee.Id" asp-action="UpdateEmployee" asp-controller="CM" method="get">
+                                        <button type="submit" class="btn btn-gradient-secondary btn-sm">Edit</button>
+                                    </form>
+                                </td>
+                                <td>
+                                    <form asp-route-id="@employee.Id" asp-action="EmployeeDetail" asp-controller="CM" method="get">
+                                        <button type="submit" class="btn btn-gradient-info btn-sm">Detail</button>
+                                    </form>
+                                </td>
+                                <td>
+                                    <form asp-route-id="@employee.Id" asp-action="DeleteEmployee" asp-controller="CM" method="post">
+                                        <input type="hidden" name="companyDto.Id" value="@employee.Id" />
+                                        @*<input type="hidden" name="companyDto.Status" value="@(employee.Status.HasValue && employee.Status.Value ? "true" : "false")" />*@
+                                        <button type="submit" class="btn btn-gradient-danger btn-sm">Delete</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    }
+
+                </table>
+                <button id="deleted-button" class="btn btn-gradient-primary btn-sm">See Deleted Companies</button>
+            </div>
+
+            <div class="flip-card-back">
+                <table class=" table table-sm table-bordered">
+                    @{
+                        if (anyInActive == false)
+                        {
+                            <tr>
+                                <th>There are no passive companies in the system</th>
+                            </tr>
+                        }
+                        else
+                        {
+                            <tr>
+                                <th>Profile Photo</th>
+                                <th>FirstName</th>
+                                <th>SecondName</th>
+                                <th>LastName</th>
+                                <th>SecondLastName</th>
+                                <th>Profession</th>
+                                <th>Number</th>
+                                <th>Email</th>
+                            </tr>
+                        }
+                    }
+                    @foreach (AppUser employee in Model)
+                    {
+                        if (employee.Status == false)
+                        {
+                            <tr>
+                                <td>
+                                    @{
+
+                                        <div class="form-group">
+                                            @{
+                                                string base64String = Convert.ToBase64String(employee.ProfilePhoto);
+                                                if (base64String == "")
+                                                {
+                                                    if (employee.Gender == "Male")
+                                                    {
+                                                        <img src="~/Content/assets/images/faces/default.jpg" alt="Profile Photo" style="width: 100px; height: 100px; object-fit:cover;" />
+                                                    }
+                                                    else
+                                                    {
+                                                        <img src="~/Content/assets/images/faces/defaultwomen.jpg" alt="Profile Photo" style="width: 100px; height: 100px; object-fit:cover;" />
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    <img src="data:image/jpeg;base64,@(base64String)" alt="Profile Photo" style="width: 100px; height: 100px; object-fit:cover;" />
+                                                }
+                                            }
+
+                                        </div>
+
+                                    }
+                                </td>
+                                <td>@employee.FirstName</td>
+                                <td>@employee.SecondName</td>
+                                <td>@employee.LastName</td>
+                                <td>@employee.SecondLastName</td>
+                                <td>@employee.Profession</td>
+                                <td>
+                                    <div>
+                                        <span>@FormatliTelefonNumarasi(employee.PhoneNumber)</span>
+                                    </div>
+                                </td>
+                                <td>@employee.Email</td>
+                                <td>
+                                    @*<a class="btn btn-sm btn-primary" asp-action="UpdateCompany" asp-area="SiteManager" asp-controller="Company" asp-route-id="@companyDto.Id">Update</a>*@
+                                    <form asp-route-id="@employee.Id" asp-action="UpdateEmployee" asp-controller="CM" method="get">
+                                        <button type="submit" class="btn btn-gradient-secondary btn-sm">Edit</button>
+                                    </form>
+                                </td>
+                                <td>
+                                    <form asp-route-id="@employee.Id" asp-action="EmployeeDetail" asp-controller="CM" method="get">
+                                        <button type="submit" class="btn btn-gradient-info btn-sm">Detail</button>
+                                    </form>
+                                </td>
+                                <td>
+                                    <form asp-route-id="@employee.Id" asp-action="DeleteEmployee" asp-controller="CM" method="post">
+                                        <input type="hidden" name="companyDto.Id" value="@employee.Id" />
+                                        @*<input type="hidden" name="companyDto.Status" value="@(employee.Status.HasValue && employee.Status.Value ? "true" : "false")" />*@
+                                        <button type="submit" class="btn btn-gradient-danger btn-sm">Recover</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+
+                    }
+
+                </table>
+                <button id="active-button" class="btn btn-gradient-primary btn-sm">See Active Companies</button>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+    var dondurButton = document.getElementById('deleted-button');
+    var geriButton = document.getElementById('active-button')
+    var flipCardInner = document.querySelector('.flip-card-inner');
+
+    dondurButton.addEventListener('click', function () {
+        flipCardInner.style.transform = 'rotateX(180deg)';
+    });
+    geriButton.addEventListener('click', function () {
+        flipCardInner.style.transform = 'rotateX(0deg)';
+    });
+</script>
+
+<style>
+    body {
+        font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .flip-card {
+        background-color: transparent;
+    }
+
+    .flip-card-inner {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        text-align: center;
+        transition: transform 0.6s;
+        transform-style: preserve-3d;
+        box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    }
+
+    /* .flip-card-inner {
+                            transform: rotateX(180deg);
+                        }*/
+
+    .flip-card-front, .flip-card-back {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        -webkit-backface-visibility: hidden;
+        backface-visibility: hidden;
+    }
+
+    .flip-card-front {
+        background-color: #bbb;
+        color: black;
+    }
+
+    .flip-card-back {
+        background-color: #2980b9;
+        color: white;
+        transform: rotateX(180deg);
+    }
+</style>
+

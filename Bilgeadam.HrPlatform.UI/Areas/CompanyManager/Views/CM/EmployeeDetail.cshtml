@@ -1,0 +1,132 @@
+﻿@model AppUser
+@{
+    ViewData["Title"] = "EmployeeDetail";
+}
+
+<h1>Employee Detail</h1>
+
+@functions {
+    public string FormatliTelefonNumarasi(string telefonNumarasi)
+    {
+        if (telefonNumarasi.Length != 10)
+        {
+            // Telefon numarası 10 haneli olmalıdır. İsteğe göre hata kontrolü yapabilirsiniz.
+            return telefonNumarasi;
+        }
+
+
+
+        return string.Format("({0}) {1} {2} {3}",
+        telefonNumarasi.Substring(0, 3),
+        telefonNumarasi.Substring(3, 3),
+        telefonNumarasi.Substring(6, 2),
+        telefonNumarasi.Substring(8, 2));
+    }
+}
+
+<div>
+    <div class="row">
+        <div class="col md-3">
+            @{
+                string base64String = Convert.ToBase64String(Model.ProfilePhoto);
+                if (base64String == "")
+                {
+                    if (Model.Gender == "Male")
+                    {
+                        <img src="~/Content/assets/images/faces/default.jpg" alt="Profile Photo" style="width: 200px; height: 200px; object-fit:cover;" />
+                    }
+                    else
+                    {
+                        <img src="~/Content/assets/images/faces/defaultwomen.jpg" alt="Profile Photo" style="width: 200px; height: 200px; object-fit:cover;" />
+                    }
+                }
+                else
+                {
+                    <img src="data:image/jpeg;base64,@(base64String)" alt="Profile Photo" style="width: 200px; height: 200px; object-fit:cover;" />
+                }
+            }
+            <div class="form-item">
+                <a asp-action="UpdateEmployee" asp-controller="CM" name="id" asp-route-id="@Model.Id" type="submit" class="btn btn-primary">Edit Informations</a>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <table class="table table-bordered">
+                <tbody>
+                    <tr>
+                        <th scope="col">FirstName</th>
+                        <td style="text-transform: capitalize;">@Html.DisplayFor(model => model.FirstName)</td>
+                    </tr>
+                    <tr>
+                        <th scope="col">SecondName</th>
+                        <td style="text-transform: capitalize;">@Html.DisplayFor(model => model.SecondName)</td>
+                    </tr>
+                    <tr>
+                        <th scope="col">LastName</th>
+                        <td>@Html.DisplayFor(model => model.LastName)</td>
+                    </tr>
+                    <tr>
+                        <th scope="col">Second LastName</th>
+                        <td>@Html.DisplayFor(model => model.SecondLastName)</td>
+                    </tr>
+                    <tr>
+                        <th scope="col">Birth Date</th>
+                        <td>@Html.DisplayFor(model => model.BirthDate)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-3">
+            <table class="table table-bordered">
+                <tbody>
+                    <tr>
+                        <th scope="col">Birth Place</th>
+                        <td>@Html.DisplayFor(model => model.BirthPlace)</td>
+                    </tr>
+                    <tr>
+                        <th scope="col">Tc Number</th>
+                        <td>@Html.DisplayFor(model => model.TCNo)</td>
+                    </tr>
+                    <tr>
+                        <th scope="col">Date Of Recruitment</th>
+                        <td>@Html.DisplayFor(model => model.DateOfRecruitment)</td>
+                    </tr>
+                    <tr>
+                        <th scope="col">Contract End Date</th>
+                        <td>@Html.DisplayFor(model => model.ContractEndDate)</td>
+                    </tr>
+                    <tr>
+                        <th scope="col">Profession</th>
+                        <td>@Html.DisplayFor(model => model.Profession)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-3">
+            <table class="table table-borderless">
+                <tbody>
+                    <tr>
+                        <th scope="col">Department</th>
+                        <td>@Html.DisplayFor(model => model.Department)</td>
+                    </tr>
+                    <tr>
+                        <th scope="col">E-Mail</th>
+                        <td>@Html.DisplayFor(model => model.Email)</td>
+                    </tr>
+                    <tr>
+                        <th scope="col">Address</th>
+                        <td>@Html.DisplayFor(model => model.Address)</td>
+                    </tr>
+                    <tr>
+                        <th scope="col">Phone Number</th>
+                        <td>@Html.DisplayFor(model => model.PhoneNumber)</td>
+                    </tr>
+                    <tr>
+                        <th scope="col">Company Name</th>
+                        <td>@Html.DisplayFor(model => model.Company.CompanyName)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>

@@ -1,0 +1,171 @@
+﻿
+@{
+    ViewData["Title"] = "CreateCompanyManager";
+    Layout = "~/Areas/SiteManager/Views/Shared/_MyLayout.cshtml";
+
+}
+@{
+    string[] gender = {"Male", "Female"};
+}
+
+@using Bilgeadam.HrPlatform.Entities.DTOs
+@model CompanyManagerDto
+
+
+@*<a asp-action="GetCompanyManager" asp-controller="CompanyManager" class="btn btn-primary";color:white">Company Manager List</a>*@
+@*<div asp-validation-summary="All" class="text-danger"></div>*@
+<br />
+<br />
+
+<h4 style="text-decoration:underline">Create Company Manager</h4>
+
+<hr />
+<div class="row">
+    <form asp-area="SiteManager" asp-controller="CompanyManager" asp-action="CreateCompanyManager" method="post" enctype="multipart/form-data">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label asp-for="ProfilePhoto" class="control-label"><strong>[Profile Photo]</strong></label>
+                    <div id="logoPreview">
+                        <div class="form-group">
+                            @{
+                                if (Model.ProfilePhoto == null)
+                                {
+                                    <img src="~/Content/assets/images/noCompanyLogo.png" alt="Profile Photo" style="width: 200px; height: 200px; object-fit:cover;" />
+                                }
+                                else
+                                {
+                                    string base64String = Convert.ToBase64String(Model.ProfilePhoto);
+                                    if (base64String == "")
+                                    {
+                                        <img src="~/Content/assets/images/noCompanyLogo.png" alt="Profile Photo" style="width: 200px; height: 200px; object-fit:cover;" />
+                                    }
+                                    else
+                                    {
+                                        <img src="data:image/jpeg;base64,@(base64String)" alt="Profile Photo" style="width: 200px; height: 200px; object-fit:cover;" />
+                                    }
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label asp-for="ProfilePhoto" class="control-label">Profile Photo</label>
+                    @*<input asp-for="Logo" name="photo" class="form-control" />*@
+                    <input type="file" name="photo" accept=".jpg, .jpeg, .png" onchange="previewLogo(this)" />
+                </div>
+                <div class="form-group d-none">
+                    <label asp-for="Id" hidden></label>
+                    <input asp-for="Id" class="form-control" hidden />
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label asp-for="FirstName" class="control-label" required>First Name</label>
+                    <input asp-for="FirstName" class="form-control" />
+                    <span asp-validation-for="FirstName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="SecondName" class="control-label">Second Name</label>
+                    <input asp-for="SecondName" class="form-control" />
+                    <span asp-validation-for="SecondName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="LastName" class="control-label">LastName</label>
+                    <input asp-for="LastName" class="form-control" />
+                    <span asp-validation-for="LastName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="SecondLastName" class="control-label">Second LastName</label>
+                    <input asp-for="SecondLastName" class="form-control" />
+                    <span asp-validation-for="SecondLastName" class="text-danger"></span>
+                </div>
+@*                <div class="form-group ">
+                    <label asp-for="Password">Password</label>
+                    <input type="password" asp-for="Password" class="form-control" />
+                </div>*@
+                <div class="form-group">
+                    <label asp-for="BirthDate" class="control-label">Birth Date</label>
+                    <input asp-for="BirthDate" placeholder="Examp:Zonguldak" class="form-control" />
+                    <span asp-validation-for="BirthDate" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="BirthPlace" class="control-label">Birth Place</label>
+                    <input asp-for="BirthPlace" class="form-control" />
+                    <span asp-validation-for="BirthPlace" class="text-danger"></span>
+                </div>
+                
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label asp-for="TCNo" class="control-label">TC Number</label>
+                    <input asp-for="TCNo" class="form-control" />
+                    <span asp-validation-for="TCNo" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="PhoneNumber" class="control-label">Phone Number</label>
+                    <input asp-for="PhoneNumber" class="form-control" placeholder="Examp:05354762211" />
+                    <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label  asp-for="Gender" class="control-label">Gender</label>
+                    <select class="form-select form-select-sm" aria-label=".form-select-sm example" asp-for="Gender" asp-items="new SelectList(gender)">
+                        <option selected="selected" value="">Please select a gender</option>
+                    </select>
+                </div>
+                <br />
+                <div class="form-group">
+                    <label asp-for="Company.CompanyName" class="control-label">Company Name</label>
+                    <select  asp-for="CompanyId" class="form-select">
+                        <option>Select Company</option>
+                        @foreach (var item in Model.CompanyForDropDown)
+                        {
+                            <option value="@item.Value">@item.Text</option>
+                        }
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Address" class="control-label">Adress</label>
+                    <input asp-for="Address" class="form-control" />
+                    <span asp-validation-for="Address" class="text-danger"></span>
+                </div>
+                <br>
+                <div class="form-group">
+                    <label asp-for="Profession" class="control-label">Profession</label>
+                    <input asp-for="Profession" class="form-control" />
+                    <span asp-validation-for="Profession" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+                <a class="btn btn-primary" style="background-color:coral" asp-action="GetCompanyManager">Back to List</a>
+
+            </div>
+        </div>
+    </form>
+</div>
+
+
+<div>
+</div>
+
+<script>
+    function previewLogo(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                $('#logoPreview').html('<img src="' + e.target.result + '" alt="Profile Photo" style="width: 200px; height: 200px; object-fit: cover;" />');
+            }
+            reader.readAsDataURL(input.files[0]);
+        } else {
+            // Dosya seçilmediği durumda, modeldeki logo kullanılacak
+            var modelLogo = '@(Model.ProfilePhoto != null ? Convert.ToBase64String(Model.ProfilePhoto) : null)';
+            if (modelLogo == null) {
+                $('#logoPreview').html('<img src="~/Content/assets/images/noCompanyLogo.png" alt="Profile Photo" style="width: 200px; height: 200px; object-fit: cover;" />');
+            } else {
+                $('#logoPreview').html('<img src="data:image/jpeg;base64,' + modelLogo + '" alt="Profile Photo" style="width: 200px; height: 200px; object-fit: cover;" />');
+            }
+        }
+    }
+</script>

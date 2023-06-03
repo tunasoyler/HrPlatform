@@ -1,0 +1,168 @@
+﻿@model Bilgeadam.HrPlatform.Entities.Entities.Company
+
+@{
+    ViewData["Title"] = "CreateCompany";
+    Layout = "~/Views/Shared/_MyLayout.cshtml";
+}
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+
+
+
+<h1>CreateCompany</h1>
+<hr />
+<div class="row">
+    <form asp-area="SiteManager" asp-action="CreateCompany" asp-controller="Company" method="post" enctype="multipart/form-data">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="row">
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label asp-for="Logo" class="control-label"><strong>[Profile Photo]</strong></label>
+                    <div id="logoPreview">
+                        <div class="form-group">
+                            @{
+                                if (Model.Logo == null)
+                                {
+                                    <img src="~/Content/assets/images/noCompanyLogo.png" alt="Profile Photo" style="width: 200px; height: 200px; object-fit:cover;" />
+                                }
+                                else
+                                {
+                                    string base64String = Convert.ToBase64String(Model.Logo);
+                                    if (base64String == "")
+                                    {
+                                        <img src="~/Content/assets/images/noCompanyLogo.png" alt="Profile Photo" style="width: 200px; height: 200px; object-fit:cover;" />
+                                    }
+                                    else
+                                    {
+                                        <img src="data:image/jpeg;base64,@(base64String)" alt="Profile Photo" style="width: 200px; height: 200px; object-fit:cover;" />
+                                    }
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Logo" class="control-label">Profile Photo</label>
+                    @*<input asp-for="Logo" name="photo" class="form-control" />*@
+                    <input type="file" name="photo" accept=".jpg, .jpeg, .png" onchange="previewLogo(this)" />
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label asp-for="CompanyName" class="control-label"></label>
+                    <input asp-for="CompanyName" class="form-control" />
+                    <span asp-validation-for="CompanyName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="CompanyTitle" class="control-label"></label>
+                    <input asp-for="CompanyTitle" class="form-control" />
+                    <span asp-validation-for="CompanyTitle" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="MersisNumber" class="control-label"></label>
+                    <input asp-for="MersisNumber" class="form-control" />
+                    <span asp-validation-for="MersisNumber" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="TaxIdentificationNumber" class="control-label"></label>
+                    <input asp-for="TaxIdentificationNumber" class="form-control" />
+                    <span asp-validation-for="TaxIdentificationNumber" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="TaxOffice" class="control-label"></label>
+                    <input asp-for="TaxOffice" class="form-control" />
+                    <span asp-validation-for="TaxOffice" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="PhoneNumber" class="control-label"></label>
+                    <input asp-for="PhoneNumber" class="form-control" />
+                    <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Address" class="control-label"></label>
+                    <input asp-for="Address" class="form-control" />
+                    <span asp-validation-for="Address" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Email" class="control-label"></label>
+                    <input asp-for="Email" class="form-control" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label asp-for="EmployeeCount" class="control-label"></label>
+                    <input asp-for="EmployeeCount" class="form-control" />
+                    <span asp-validation-for="EmployeeCount" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Establishment" class="control-label"></label>
+                    <input asp-for="Establishment" class="form-control" />
+                    <span asp-validation-for="Establishment" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="ContactStartDate" class="control-label"></label>
+                    <input asp-for="ContactStartDate" class="form-control datepicker" />
+                    <span asp-validation-for="ContactStartDate" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="ContactEndDate" class="control-label"></label>
+                    <input asp-for="ContactEndDate" class="form-control datepicker" />
+                    <span asp-validation-for="ContactEndDate" class="text-danger"></span>
+                </div>
+                <div class="form-group d-none">
+                    <div class="form-group">
+                        <select asp-for="Status" class="form-control">
+                            <option selected="selected" value="true">Please select</option>
+                        </select>
+                    </div>
+                </div>
+               @* <div class="form-group">
+                    <label asp-for="Status" class="control-label">Status</label>
+                    <select class="form-select form-select-sm" aria-label=".form-select-sm example" asp-for="Status" >
+                        <option selected="selected" value="">Please select a gender</option>
+                    </select>
+                </div>*@
+                <div class="form-group">
+                    <label asp-for="CreatedDate" class="control-label"></label>
+                    <input asp-for="CreatedDate" class="form-control" />
+                    <span asp-validation-for="CreatedDate" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="UpdatedDate" class="control-label"></label>
+                    <input asp-for="UpdatedDate" class="form-control" />
+                    <span asp-validation-for="UpdatedDate" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div>
+                    <input type="submit" value="Create" class="btn btn-primary" style="margin-bottom:10px;" />
+                    <a class="btn btn-primary" style="background-color:coral;" asp-action="Index">Back to List</a>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+    function previewLogo(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                $('#logoPreview').html('<img src="' + e.target.result + '" alt="Profile Photo" style="width: 200px; height: 200px; object-fit: cover;" />');
+            }
+            reader.readAsDataURL(input.files[0]);
+        } else {
+            // Dosya seçilmediği durumda, modeldeki logo kullanılacak
+            var modelLogo = '@(Model.Logo != null ? Convert.ToBase64String(Model.Logo) : null)';
+            if (modelLogo == null) {
+                $('#logoPreview').html('<img src="~/Content/assets/images/noCompanyLogo.png" alt="Profile Photo" style="width: 200px; height: 200px; object-fit: cover;" />');
+            } else {
+                $('#logoPreview').html('<img src="data:image/jpeg;base64,' + modelLogo + '" alt="Profile Photo" style="width: 200px; height: 200px; object-fit: cover;" />');
+            }
+        }
+    }
+</script>
+
+

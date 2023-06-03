@@ -1,0 +1,71 @@
+﻿@using Bilgeadam.HrPlatform.Entities.Enums;
+@model Advance
+
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+
+
+<form asp-action="RequestAdvance" method="post">
+    <div class="form-group">
+        <label for="AdvanceType">Advance Type:</label><br>
+        <div class="form-check form-check-inline">
+            <input asp-for="AdvanceType" value="@AdvanceType.Corporate" class="form-check-input" type="radio" id="corporateRadio" checked>
+            <label class="form-check-label" for="corporateRadio">
+                Corporate
+            </label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input asp-for="AdvanceType" value="@AdvanceType.Personal" class="form-check-input" type="radio" id="personalRadio">
+            <label class="form-check-label" for="personalRadio">
+                Personal
+            </label>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="CurrencyType">Currency Type:</label><br>
+        <div class="form-check form-check-inline">
+            <input asp-for="CurrencyType" value="@CurrencyType.TL" class="form-check-input" type="radio" id="tlRadio">
+            <label class="form-check-label" for="tlRadio">
+                TL
+            </label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input asp-for="CurrencyType" value="@CurrencyType.EURO" class="form-check-input" type="radio" id="euroRadio">
+            <label class="form-check-label" for="euroRadio">
+                EURO
+            </label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input asp-for="CurrencyType" value="@CurrencyType.DOLAR" class="form-check-input" type="radio" id="dolarRadio">
+            <label class="form-check-label" for="dolarRadio">
+                DOLAR
+            </label>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="Amount">Amount:</label>
+        <input asp-for="Amount" type="number" class="form-control" placeholder="Enter a number only" />
+        <span asp-validation-for="Amount" class="text-danger"></span>
+    </div>
+
+    <div class="form-group visually-hidden">
+        <label for="AdvanceStatus">Advance Status:</label><br>
+        <div class="form-check form-check-inline">
+            <input asp-for="AdvanceStatus" value="@AdvanceStatus.OnStandBy" class="form-check-input" type="radio" id="standbyRadio" checked />
+            <label class="form-check-label" for="standbyRadio">
+                On Standby
+            </label>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="Description">Description:</label>
+        <textarea class="form-control" asp-for="Description" rows="3"></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>

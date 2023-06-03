@@ -1,0 +1,142 @@
+﻿@model Bilgeadam.HrPlatform.Entities.DTOs.CompanyUpdateDtos
+
+@{
+    ViewData["Title"] = "UpdateCompany";
+    Layout = "~/Views/Shared/_MyLayout.cshtml";
+    string myLogoSrc;
+    if (Model.Logo == null)
+    {
+        myLogoSrc = "~/Content/assets/images/noCompanyLogo.png";
+    }
+    else
+    {
+        myLogoSrc = Convert.ToBase64String(Model.Logo);
+    }
+}
+@functions {
+    public string FormatliTelefonNumarasi(string telefonNumarasi)
+    {
+        if (telefonNumarasi.Length != 10)
+        {
+            // Telefon numarası 10 haneli olmalıdır. İsteğe göre hata kontrolü yapabilirsiniz.
+            return telefonNumarasi;
+        }
+
+
+
+        return string.Format("({0}) {1} {2} {3}",
+        telefonNumarasi.Substring(0, 3),
+        telefonNumarasi.Substring(3, 3),
+        telefonNumarasi.Substring(6, 2),
+        telefonNumarasi.Substring(8, 2));
+    }
+}
+<h1>UpdateCompany</h1>
+
+<h4>CompanyUpdateDtos</h4>
+<hr />
+<div class="row">
+    <form asp-action="UpdateCompany" asp-controller="Company" method="post" enctype="multipart/form-data">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label asp-for="Logo" class="control-label"></label>
+                    <div id="logoPreview">
+                        <div class="form-group">
+                            @{
+                                if (Model.Logo == null)
+                                {
+                                    <img src="~/Content/assets/images/noCompanyLogo.png" alt="Profile Photo" style="width: 200px; height: 200px; object-fit:cover;" />
+                                }
+                                else
+                                {
+                                    string base64String = Convert.ToBase64String(Model.Logo);
+                                    if (base64String == "")
+                                    {
+                                        <img src="~/Content/assets/images/noCompanyLogo.png" alt="Profile Photo" style="width: 200px; height: 200px; object-fit:cover;" />
+                                    }
+                                    else
+                                    {
+                                        <img src="data:image/jpeg;base64,@(base64String)" alt="Profile Photo" style="width: 200px; height: 200px; object-fit:cover;" />
+                                    }
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Logo" class="control-label">Select New Logo</label>
+                    @*<input asp-for="Logo" name="photo" class="form-control" />*@
+                    <input type="file" name="photo" accept=".jpg, .jpeg, .png" onchange="previewLogo(this)" />
+                </div>
+                <div class="form-group d-none">
+                    <label asp-for="Id" class="control-label"></label>
+                    <input asp-for="Id" class="form-control" />
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label asp-for="CompanyName" class="control-label" required>Company Name</label>
+                    <input asp-for="CompanyName" class="form-control" />
+                    <span asp-validation-for="CompanyName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="CompanyTitle" class="control-label">Company Title</label>
+                    <input asp-for="CompanyTitle" class="form-control" />
+                    <span asp-validation-for="CompanyTitle" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="PhoneNumber" class="control-label">Phone Number</label>
+                    <input asp-for="PhoneNumber" class="form-control" placeholder="@FormatliTelefonNumarasi(Model.PhoneNumber)" />
+                    <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label asp-for="Address" class="control-label"></label>
+                    <input asp-for="Address" class="form-control" />
+                    <span asp-validation-for="Address" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Email" class="control-label"></label>
+                    <input asp-for="Email" class="form-control" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+
+                <div class="form-group d-none">
+                    <label asp-for="Status" class="control-label"></label>
+                    <input type="hidden" asp-for="Status" class="" value="@(Model.Status ? "true" : "false")" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </div>
+    </form>
+</div>
+
+
+<div>
+    <a class="btn btn-primary" style="background-color:coral;" asp-action="Index">Back to List</a>
+</div>
+
+<script>
+    function previewLogo(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                $('#logoPreview').html('<img src="' + e.target.result + '" alt="Profile Photo" style="width: 200px; height: 200px; object-fit: cover;" />');
+            }
+            reader.readAsDataURL(input.files[0]);
+        } else {
+            // Dosya seçilmediği durumda, modeldeki logo kullanılacak
+            var modelLogo = '@(Model.Logo != null ? Convert.ToBase64String(Model.Logo) : null)';
+            if (modelLogo == null) {
+                $('#logoPreview').html('<img src="~/Content/assets/images/noCompanyLogo.png" alt="Profile Photo" style="width: 200px; height: 200px; object-fit: cover;" />');
+            } else {
+                $('#logoPreview').html('<img src="data:image/jpeg;base64,' + modelLogo + '" alt="Profile Photo" style="width: 200px; height: 200px; object-fit: cover;" />');
+            }
+        }
+    }
+</script>

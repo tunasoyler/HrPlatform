@@ -1,0 +1,89 @@
+﻿
+@{
+    ViewData["Title"] = "GetCompanyManager";
+    Layout = "~/Views/Shared/_MyLayout.cshtml";
+}
+
+<h1>GetCompanyManager</h1>
+@using Bilgeadam.HrPlatform.Entities.Entities;
+@model IList<AppUser>
+
+@foreach (var item in Model)
+{
+    <div class="col-lg-12 mb-4 mb-lg-0">
+        <div style="display: flex; align-items: center;">
+            <div class="col-lg-3 mb-4 mb-lg-0">
+                @if (item.ProfilePhoto != null)
+                {
+                    <img width="100" class="rounded-circle" style="width: 100px; height: 100px; object-fit:cover;" src="data:image;base64,@System.Convert.ToBase64String(item.ProfilePhoto)" alt="...">
+                }
+            </div>
+            <div class="col-lg-3 mb-4 mb-lg-0">
+                <h1>@item.FirstName @item.SecondName @item.LastName @item.SecondLastName</h1>
+            </div>
+        </div>
+    </div>
+    }
+    <hr />
+    <div class="col-lg-6 mb-4 mb-lg-0">
+        <table class="table table-bordered">
+            <tbody>
+                @foreach (var item in Model)
+            {
+
+                <tr>
+                    <th scope="col">Profession</th>
+                    <td>
+                        @if (item.Profession is null)
+                        {
+                            item.Profession = " --- ";
+                            <h1>@Html.DisplayFor(x => item.Profession)</h1>
+                        }
+                        else
+                        {
+                            item.Department = item.Department;
+                            @Html.DisplayFor(x => item.Profession)
+
+                        }
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="col">Department</th>
+                    <td>
+                        @if (item.Department is null)
+                        {
+                            item.Department = " --- ";
+                            <h1>@Html.DisplayFor(x => item.Department)</h1>
+                        }
+                        else
+                        {
+                            item.Department = item.Department;
+                            @Html.DisplayFor(x => item.Department)
+
+                        }
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="col">E-Mail</th>
+                    <td>@Html.DisplayFor(x => item.Email)</td>
+                </tr>
+                <tr>
+                    <th scope="col">Company Name</th>
+                    <td>@Html.DisplayFor(x => item.Company.CompanyName)</td>
+                </tr>
+                <tr>
+                    <th scope="col">Phone</th>
+                    <td>@Html.DisplayFor(x => item.PhoneNumber)</td>
+                    @*      <input asp-for="PhoneNumber" class="form-control" placeholder="(XXX) XXX-XXXX" oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\d{3})(\d{3})(\d{4})/, '($1) $2-$3')" maxlength="14" />*@
+                </tr>
+                <tr>
+                    <td>
+                        <a href="~/Home/Update" type="submit" class="btn btn-primary">Edit User Infos</a>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+
+

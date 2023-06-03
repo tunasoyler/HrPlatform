@@ -1,0 +1,243 @@
+﻿@model Bilgeadam.HrPlatform.Entities.Entities.Company
+
+@{
+    ViewData["Title"] = "DetailCompany";
+    Layout = "~/Views/Shared/_MyLayout.cshtml";
+}
+@functions {
+    public string FormatliTelefonNumarasi(string telefonNumarasi)
+    {
+        if (telefonNumarasi.Length != 10)
+        {
+            // Telefon numarası 10 haneli olmalıdır. İsteğe göre hata kontrolü yapabilirsiniz.
+            return telefonNumarasi;
+        }
+
+
+
+        return string.Format("({0}) {1} {2} {3}",
+        telefonNumarasi.Substring(0, 3),
+        telefonNumarasi.Substring(3, 3),
+        telefonNumarasi.Substring(6, 2),
+        telefonNumarasi.Substring(8, 2));
+    }
+}
+
+<div>
+    <div class="row">
+        <div class="col md-3">
+            @{
+                if (Model.Logo != null)
+                {
+                    <dd class="col-sm-10">
+                        <img style="width: 200px; object-fit:cover;" src="data:image;base64,@System.Convert.ToBase64String(Model.Logo)" />
+                    </dd>
+                }
+                else
+                {
+                    <img src="~/Content/assets/images/noCompanyLogo.png" alt="Profile Photo" style="width: 200px; height: 200px; object-fit:cover;" />
+                }
+            }
+            <a asp-action="UpdateCompany" asp-controller="Company" name="id" asp-route-id="@Model.Id" type="submit" class="btn btn-primary">Edit Informations</a>
+        </div>
+        <div class="col-md-3">
+            <table class="table table-bordered">
+                <tbody>
+                    <tr>
+                        <th scope="col">Company Name</th>
+                        <td style="text-transform: capitalize;">@Html.DisplayFor(model => model.CompanyName)</td>
+                    </tr>
+                    <tr>
+                        <th scope="col">Company Title</th>
+                        <td style="text-transform: capitalize;">@Html.DisplayFor(model => model.CompanyTitle)</td>
+                    </tr>
+                    <tr>
+                        <th scope="col">Mersis Number</th>
+                        <td>@Html.DisplayFor(model => model.MersisNumber)</td>
+                    </tr>
+                    <tr>
+                        <th scope="col">Tax Identification Number</th>
+                        <td>@Html.DisplayFor(model => model.TaxIdentificationNumber)</td>
+                    </tr>
+                    <tr>
+                        <th scope="col">Tax Office</th>
+                        <td>@Html.DisplayFor(model => model.TaxOffice)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-3">
+            <table class="table table-bordered">
+                <tbody>
+                    <tr>
+                        <th scope="col">Phone Number</th>
+                        <td>@Html.DisplayFor(model => model.PhoneNumber)</td>
+                    </tr>
+                    <tr>
+                        <th scope="col">Address</th>
+                        <td>@Html.DisplayFor(model => model.Address)</td>
+                    </tr>
+                    <tr>
+                        <th scope="col">Employee Count</th>
+                        <td>@Html.DisplayFor(model => model.EmployeeCount)</td>
+                    </tr>
+                    <tr>
+                        <th scope="col">E-Mail</th>
+                        <td>@Html.DisplayFor(model => model.Email)</td>
+                    </tr>
+                    <tr>
+                        <th scope="col">Establishment</th>
+                        <td>@Html.DisplayFor(model => model.Establishment)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-3">
+            <table class="table table-borderless">
+                <tbody>
+                    <tr>
+                        <th scope="col">Contract Start Date</th>
+                        <td>@Html.DisplayFor(model => model.ContactStartDate , new { @class = "form-control datepicker" })</td>
+                    </tr>
+                    <tr>
+                        <th scope="col">Contract End Date</th>
+                        <td>@Html.DisplayFor(model => model.ContactEndDate, new { @class = "form-control datepicker" })</td>
+                    </tr>
+                    <tr>
+                        <th scope="col">Created Date</th>
+                        <td>@Html.DisplayFor(model => model.CreatedDate)</td>
+                    </tr>
+                    <tr>
+                        <th scope="col">Update Date</th>
+                        <td>@Html.DisplayFor(model => model.UpdatedDate)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+    @*@if (Model.Logo != null)
+    {
+    <div class="form-group">
+    @{
+    string base64String = Convert.ToBase64String(Model.Logo);
+    }
+    <img class="rounded-circle" src="data:image/jpeg;base64,@(base64String)" alt="Profile Photo" style="width: 100px; height: 100px; object-fit:cover;" />
+    </div>
+    }
+    <hr />
+    <dl class="row">
+    <dt class = "col-sm-2">
+    @Html.DisplayNameFor(model => model.CompanyName)
+    </dt>
+    <dd class = "col-sm-10">
+    @Html.DisplayFor(model => model.CompanyName)
+    </dd>
+    <dt class = "col-sm-2">
+    @Html.DisplayNameFor(model => model.CompanyTitle)
+    </dt>
+    <dd class = "col-sm-10">
+    @Html.DisplayFor(model => model.CompanyTitle)
+    </dd>
+    <dt class = "col-sm-2">
+    @Html.DisplayNameFor(model => model.MersisNumber)
+    </dt>
+    <dd class = "col-sm-10">
+    @Html.DisplayFor(model => model.MersisNumber)
+    </dd>
+    <dt class = "col-sm-2">
+    @Html.DisplayNameFor(model => model.TaxIdentificationNumber)
+    </dt>
+    <dd class = "col-sm-10">
+    @Html.DisplayFor(model => model.TaxIdentificationNumber)
+    </dd>
+    <dt class = "col-sm-2">
+    @Html.DisplayNameFor(model => model.TaxOffice)
+    </dt>
+    <dd class = "col-sm-10">
+    @Html.DisplayFor(model => model.TaxOffice)
+    </dd>
+    <dt class = "col-sm-2">
+    @Html.DisplayNameFor(model => model.PhoneNumber)
+    </dt>
+    <dd class = "col-sm-10">
+    @Html.DisplayFor(model => model.PhoneNumber)
+    </dd>
+    <dt class = "col-sm-2">
+    @Html.DisplayNameFor(model => model.Address)
+    </dt>
+    <dd class = "col-sm-10">
+    @Html.DisplayFor(model => model.Address)
+    </dd>
+    <dt class = "col-sm-2">
+    @Html.DisplayNameFor(model => model.Email)
+    </dt>
+    <dd class = "col-sm-10">
+    @Html.DisplayFor(model => model.Email)
+    </dd>
+    <dt class = "col-sm-2">
+    @Html.DisplayNameFor(model => model.EmployeeCount)
+    </dt>
+    <dd class = "col-sm-10">
+    @Html.DisplayFor(model => model.EmployeeCount)
+    </dd>
+    <dt class = "col-sm-2">
+    @Html.DisplayNameFor(model => model.Establishment)
+    </dt>
+    <dd class = "col-sm-10">
+    @Html.DisplayFor(model => model.Establishment)
+    </dd>
+    <dt class = "col-sm-2">
+    @Html.DisplayNameFor(model => model.ContactStartDate)
+    </dt>
+    <dd class = "col-sm-10">
+    @Html.DisplayFor(model => model.ContactStartDate)
+    </dd>
+    <dt class = "col-sm-2">
+    @Html.DisplayNameFor(model => model.ContactEndDate)
+    </dt>
+    <dd class = "col-sm-10">
+    @Html.DisplayFor(model => model.ContactEndDate)
+    </dd>
+    <dt class = "col-sm-2">
+    @Html.DisplayNameFor(model => model.Status)
+    </dt>
+    <dd class = "col-sm-10">
+    @Html.DisplayFor(model => model.Status)
+    </dd>
+    <dt class = "col-sm-2">
+    @Html.DisplayNameFor(model => model.Id)
+    </dt>
+    <dd class = "col-sm-10">
+    @Html.DisplayFor(model => model.Id)
+    </dd>
+    <dt class = "col-sm-2">
+    @Html.DisplayNameFor(model => model.CreatedDate)
+    </dt>
+    <dd class = "col-sm-10">
+    @Html.DisplayFor(model => model.CreatedDate)
+    </dd>
+    <dt class = "col-sm-2">
+    @Html.DisplayNameFor(model => model.UpdatedDate)
+    </dt>
+    <dd class = "col-sm-10">
+    @Html.DisplayFor(model => model.UpdatedDate)
+    </dd>
+    <dt class="col-sm-2">
+    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ })
+    </dt>
+    <dd col="col-sm-10"><a asp-action="Index">Back to List</a></dd>
+
+    </dl>*@
+</div>
+<style>
+<script>
+    $(document).ready(function () {
+        $('.datepicker').datepicker({
+            format: 'yyyy-mm-dd',
+            autoclose: true
+        });
+    });
+</script>
+</style>

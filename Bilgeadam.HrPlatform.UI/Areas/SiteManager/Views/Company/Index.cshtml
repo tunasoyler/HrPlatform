@@ -1,0 +1,288 @@
+﻿@using Bilgeadam.HrPlatform.Entities.DTOs;
+@using Bilgeadam.HrPlatform.Entities.Entities;
+@model IEnumerable<CompanyDto>
+@{
+    ViewData["Title"] = "Home Page";
+    Layout = "~/Views/Shared/_MyLayout.cshtml";
+}
+@functions {
+    public string FormatliTelefonNumarasi(string telefonNumarasi)
+    {
+        if (telefonNumarasi.Length != 10)
+        {
+            // Telefon numarası 10 haneli olmalıdır. İsteğe göre hata kontrolü yapabilirsiniz.
+            return telefonNumarasi;
+        }
+
+        return string.Format("({0}) {1} {2} {3}",
+        telefonNumarasi.Substring(0, 3),
+        telefonNumarasi.Substring(3, 3),
+        telefonNumarasi.Substring(6, 2),
+        telefonNumarasi.Substring(8, 2));
+    }
+}
+
+@{
+    bool anyactive = false;
+    bool anyInActive = false;
+    foreach (CompanyDto company in Model)
+    {
+        if (company.Status == true)
+        {
+            anyactive = true;
+        }
+        else
+        {
+            anyInActive = true;
+        }
+    }
+}
+
+@*@if (TempData["result"] != null)
+{
+    <script>
+        alert("İşlem başarılı");
+    </script>
+}*@
+
+@*<a asp-action="Create" asp-controller="Admin" class="btn btn-secondary">Create</a>*@
+<div style="width: 100%; height:100%; overflow-x: scroll;">
+    <div>
+        <div class="flip-card">
+            <div class="flip-card-inner">
+                <div class="flip-card-front">
+
+                <table class=" table table-sm table-bordered">
+                    @{
+                        if (anyactive == false)
+                        {
+                            <tr>
+                                <th>No company with ongoing contract</th>
+                            </tr>
+                        }
+                        else
+                        {
+                            <tr>
+                                <th>Company Logo</th>
+                                <th>Company Name</th>
+                                <th>Company Title</th>
+                                <th>Company Number</th>
+                                <th>Company Email</th>
+                            </tr>
+                        }
+                    }
+                    @foreach (CompanyDto companyDto in Model)
+                    {
+                        if (companyDto.Status == true)
+                        {
+                            <tr>
+                                <td>
+                                    @{
+
+                                            <div class="form-group">
+                                                @{
+                                                    string base64String = Convert.ToBase64String(companyDto.Logo);
+                                                    if (base64String == "")
+                                                    {
+                                                        <img src="~/Content/assets/images/noCompanyLogo.png" alt="Profile Photo" style="width: 100px; height: 100px; object-fit:cover;" />
+                                                    }
+                                                    else
+                                                    {
+                                                        <img src="data:image/jpeg;base64,@(base64String)" alt="Profile Photo" style="width: 100px; height: 100px; object-fit:cover;" />
+                                                    }
+                                                }
+
+                                            </div>
+
+                                        }
+                                    </td>
+                                    <td>@companyDto.CompanyName</td>
+                                    <td>@companyDto.CompanyTitle</td>
+                                    <td>
+                                        <div>
+                                            <span>@FormatliTelefonNumarasi(companyDto.PhoneNumber)</span>
+                                        </div>
+
+
+                                </td>
+                                <td>@companyDto.Email</td>
+                                <td>
+                                    @*<a class="btn btn-sm btn-primary" asp-action="UpdateCompany" asp-area="SiteManager" asp-controller="Company" asp-route-id="@companyDto.Id">Update</a>*@
+                                    <form asp-action="UpdateCompany" asp-controller="Company" asp-area="SiteManager" asp-route-id="@companyDto.Id" method="get">
+                                        <button type="submit" class="btn btn-warning btn-sm">Edit</button>
+                                    </form>
+                                </td>
+                                <td>
+                                    <form asp-action="DetailCompany" asp-controller="Company" asp-route-id="@companyDto.Id" method="get">
+                                        <button type="submit" class="btn btn-success btn-sm">Detail</button>
+                                    </form>
+                                </td>
+                                <td>
+                                    <form asp-action="DeleteCompany" asp-controller="Company" method="post">
+                                        <input type="hidden" name="companyDto.Id" value="@companyDto.Id" />
+                                        <input type="hidden" name="companyDto.Status" value="@(companyDto.Status.HasValue && companyDto.Status.Value ? "true" : "false")" />
+                                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    }
+
+                </table>
+                <button id="deleted-button" class="btn btn-gradient-primary btn-sm">See companies whose contracts have expired</button>
+            </div>
+
+            <div class="flip-card-back">
+                <table class=" table table-sm table-bordered">
+                    @{
+                        if (anyInActive == false)
+                        {
+                            <tr>
+                                <th>No company out of contract</th>
+                            </tr>
+                        }
+                        else
+                        {
+                            <tr>
+                                <th>Company Logo</th>
+                                <th>Company Name</th>
+                                <th>Company Title</th>
+                                <th>Company Number</th>
+                                <th>Company Email</th>
+                            </tr>
+                        }
+                    }
+                    @foreach (CompanyDto companyDto in Model)
+                    {
+                        if (companyDto.Status == false)
+                        {
+                            <tr>
+                                <td>
+                                    @{
+
+                                            <div class="form-group">
+                                                @{
+                                                    string base64String = Convert.ToBase64String(companyDto.Logo);
+                                                    if (base64String == "")
+                                                    {
+                                                        <img src="~/Content/assets/images/noCompanyLogo.png" alt="Profile Photo" style="width: 100px; height: 100px; object-fit:cover;" />
+                                                    }
+                                                    else
+                                                    {
+                                                        <img src="data:image/jpeg;base64,@(base64String)" alt="Profile Photo" style="width: 100px; height: 100px; object-fit:cover;" />
+                                                    }
+                                                }
+
+                                            </div>
+
+                                        }
+                                    </td>
+                                    <td>@companyDto.CompanyName</td>
+                                    <td>@companyDto.CompanyTitle</td>
+                                    <td>
+                                        <div>
+                                            <span>@FormatliTelefonNumarasi(companyDto.PhoneNumber)</span>
+                                        </div>
+
+
+                                    </td>
+                                    <td>@companyDto.Email</td>
+                                    <td>
+                                    <td>
+                                        @*<a class="btn btn-sm btn-primary" asp-action="UpdateCompany" asp-controller="Company" asp-route-id="@company.Id">Update</a>*@
+                                        <form asp-action="UpdateCompany" asp-controller="Company" asp-route-id="@companyDto.Id" method="get">
+                                            <button type="submit" class="btn btn-warning btn-sm">Edit</button>
+                                        </form>
+                                    </td>
+                                    <td>
+                                        <form asp-action="DetailCompany" asp-controller="Company" asp-route-id="@companyDto.Id" method="get">
+                                            <button type="submit" class="btn btn-success btn-sm">Detail</button>
+                                        </form>
+                                    </td>
+                                    <td>
+                                        <form asp-action="DeleteCompany" asp-controller="Company" method="post">
+                                            <input type="hidden" name="companyDto.Id" value="@companyDto.Id" />
+                                            <input type="hidden" name="companyDto.Status" value="@(companyDto.Status.HasValue && companyDto.Status.Value ? "true" : "false")" />
+                                            <button type="submit" class="btn btn-danger btn-sm">Recover</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            }
+
+                        }
+
+                </table>
+                <button id="active-button" class="btn btn-gradient-primary btn-sm">See companies with ongoing contracts</button>
+            </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('.datepicker').datepicker({
+            format: 'yyyy-mm-dd',
+            autoclose: true
+        });
+    });
+</script>
+<script>
+    var dondurButton = document.getElementById('deleted-button');
+    var geriButton = document.getElementById('active-button')
+    var flipCardInner = document.querySelector('.flip-card-inner');
+
+    dondurButton.addEventListener('click', function () {
+        flipCardInner.style.transform = 'rotateX(180deg)';
+    });
+    geriButton.addEventListener('click', function () {
+        flipCardInner.style.transform = 'rotateX(0deg)';
+    });
+</script>
+
+<style>
+    body {
+        font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .flip-card {
+        background-color: transparent;
+    }
+
+    .flip-card-inner {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        text-align: center;
+        transition: transform 0.6s;
+        transform-style: preserve-3d;
+        box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    }
+
+    /* .flip-card-inner {
+                    transform: rotateX(180deg);
+                }*/
+
+    .flip-card-front, .flip-card-back {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        -webkit-backface-visibility: hidden;
+        backface-visibility: hidden;
+    }
+
+    .flip-card-front {
+        background-color: #bbb;
+        color: black;
+    }
+
+    .flip-card-back {
+        background-color: #2980b9;
+        color: white;
+        transform: rotateX(180deg);
+    }
+</style>
+

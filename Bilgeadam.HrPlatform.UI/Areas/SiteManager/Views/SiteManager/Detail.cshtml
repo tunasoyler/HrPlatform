@@ -1,0 +1,141 @@
+﻿@using Bilgeadam.HrPlatform.Entities.Entities;
+@using Bilgeadam.HrPlatform.Entities.Enums;
+@model AppUser
+
+@{
+    ViewData["Title"] = "Detail";
+    Layout = "~/Views/Shared/_MyLayout.cshtml";
+}
+@functions {
+    public string FormatliTelefonNumarasi(string telefonNumarasi)
+    {
+        if (telefonNumarasi.Length != 10)
+        {
+            // Telefon numarası 10 haneli olmalıdır. İsteğe göre hata kontrolü yapabilirsiniz.
+            return telefonNumarasi;
+        }
+
+        return string.Format("({0}) {1} {2} {3}",
+        telefonNumarasi.Substring(0, 3),
+        telefonNumarasi.Substring(3, 3),
+        telefonNumarasi.Substring(6, 2),
+        telefonNumarasi.Substring(8, 2));
+    }
+}
+<div>
+    <div class="row">
+        <div class="col">
+            <h4>User Infos</h4>
+            <hr />
+            <dl class="row">
+                <div class="col">
+                    @{
+                        if (Model.ProfilePhoto != null)
+                        {
+                            <dd class="col-sm-10">
+                                <img class="rounded-circle" style="width: 100px; height: 100px; object-fit:cover;" src="data:image;base64,@System.Convert.ToBase64String(Model.ProfilePhoto)" />
+                            </dd>
+                        }
+                        else
+                        {
+                            <div class="form-group">
+                                @{
+                                    if (Model.Gender == "Male")
+                                    {
+                                        <img class="rounded-circle" src="~/Content/assets/images/faces/default.jpg" alt="Profile Photo" style="width: 100px; height: 100px; object-fit:cover;" />
+                                    }
+                                    else
+                                    {
+                                        <img class="rounded-circle" src="~/Content/assets/images/faces/defaultwomen.jpg" alt="Profile Photo" style="width: 100px; height: 100px; object-fit:cover;" />
+                                    }
+                                }
+                            </div>
+                        }
+                    }
+                </div>
+            </dl>
+        </div>
+        <hr />
+        <div class="col-lg-6 mb-4 mb-lg-0">
+            <table class="table table-bordered">
+                <tbody>
+                    <tr>
+                        <th scope="col">First Name</th>
+                        <td style="text-transform: capitalize;">@Html.DisplayFor(model => model.FirstName) @Html.DisplayFor(model => model.SecondName)</td>
+                    </tr>
+                    <tr>
+                        <th scope="col">Last Name</th>
+                        <td style="text-transform: uppercase;">@Html.DisplayFor(model => model.LastName) @Html.DisplayFor(model => model.SecondLastName)</td>
+                    </tr>
+                    <tr>
+                        <th scope="col">Birth Date</th>
+                        <td>@Model.BirthDate.ToShortDateString()</td>
+                    </tr>
+                    <tr>
+                        <th scope="col">Birth Place</th>
+                        <td>@Html.DisplayFor(model => model.BirthPlace)</td>
+                    </tr>
+                    <tr>
+                        <th scope="col">TC No</th>
+                        <td>@Html.DisplayFor(model => model.TCNo)</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <a asp-area="SiteManager" asp-controller="SiteManager" asp-action="Update" type="submit" class="btn btn-primary">Edit Informations</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-lg-6 mb-4 mb-lg-0">
+            <table class="table table-bordered">
+                <tbody>
+                    <tr>
+                        <th scope="col">Date Of Recruitment</th>
+                        <td>@Model.DateOfRecruitment.ToShortDateString()</td>
+                    </tr>
+                    <tr>
+                        <th scope="col">Profession</th>
+                        <td style ="text-transform: capitalize;">
+                            @if (Model.Profession is null)
+                            {
+                                Model.Profession = " --- ";
+                                <h1>@Html.DisplayFor(model => model.Profession)</h1>
+                            }
+                            else
+                            {
+                                Model.Department = Model.Department;
+                                @Html.DisplayFor(model => model.Profession)
+
+                            }
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="col">Department</th>
+                        <td style="text-transform: capitalize;">
+                            @if (Model.Department is null)
+                            {
+                                Model.Department = " --- ";
+                                <h1>@Html.DisplayFor(model => model.Department)</h1>
+                            }
+                            else
+                            {
+                                Model.Department = Model.Department;
+                                @Html.DisplayFor(model => model.Department)
+
+                            }
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="col">E-Mail</th>
+                        <td>@Html.DisplayFor(model => model.Email)</td>
+                    </tr>
+                    <tr>
+                        <th scope="col">Phone</th>
+                        <td><span>@FormatliTelefonNumarasi(Model.PhoneNumber)</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

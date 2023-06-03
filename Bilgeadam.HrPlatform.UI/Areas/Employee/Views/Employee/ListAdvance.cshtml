@@ -1,0 +1,205 @@
+﻿@using Bilgeadam.HrPlatform.Entities.Enums;
+@model IEnumerable<AdvanceDTO>
+@{
+    bool anyOnStandBy = false;
+    bool anyApproved = false;
+    bool anyDenied = false;
+
+    foreach (AdvanceDTO advance in Model)
+    {
+        if (advance.AdvanceStatus == AdvanceStatus.Approved)
+        {
+            anyApproved = true;
+        }
+        else
+        {
+            anyApproved = false;
+        }
+
+        if (advance.AdvanceStatus == AdvanceStatus.OnStandBy)
+        {
+            anyOnStandBy = true;
+        }
+        else
+        {
+            anyOnStandBy = false;
+        }
+
+        if (advance.AdvanceStatus == AdvanceStatus.Denied)
+        {
+            anyDenied = true;
+        }
+        else
+        {
+            anyDenied = false;
+        }
+    }
+}
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+    <li class="nav-item">
+        <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">On Stand By</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Approved</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Denied</a>
+    </li>
+</ul>
+
+<div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+        <table class="table">
+            <thead>
+                @if (anyOnStandBy == true)
+                {
+                    <tr>
+                        <th>Amount</th>
+                        <th>Advance Type</th>
+                        <th>Receieved Time</th>
+                    </tr>
+                }
+                else
+                {
+                    <tr>There is no advance on stand by</tr>
+                }
+            </thead>
+            <tbody>
+                @{
+                    if (anyOnStandBy == true)
+                    {
+                        foreach (AdvanceDTO advance in Model)
+                        {
+                            if (advance.AdvanceStatus == AdvanceStatus.OnStandBy)
+                            {
+                                <tr data-toggle="tooltip" data-placement="top" title="@advance.Description">
+                                    <td>@advance.Amount @advance.CurrencyType</td>
+                                    <td>@advance.AdvanceType</td>
+                                    <td>@advance.ReceievedTime.ToShortDateString()</td>
+                                    <td>
+                                        <form asp-action="DeleteAdvance" asp-controller="Employee" method="post">
+                                            <input type="hidden" name="advance.Id" value="@advance.Id" />
+                                            <button type="submit" class="btn btn-gradient-danger btn-sm">Delete</button>
+                                        </form>
+                                    </td>
+                                    <td>
+                                        <form asp-action="AdvanceDetail" asp-controller="Employee" method="post">
+                                            <input type="hidden" name="advance.Id" value="@advance.Id" />
+                                            <button type="submit" class="btn btn-gradient-info btn-sm">See Description</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+        <table class="table">
+            <thead>
+                @if (anyApproved == true)
+                {
+                    <tr>
+                        <th>Amount</th>
+                        <th>Advance Type</th>
+                        <th>Receieved Time</th>
+                    </tr>
+                }
+                else
+                {
+                    <tr>There is no approved advance</tr>
+                }
+            </thead>
+            <tbody>
+                @{
+                    if (anyApproved == true)
+                    {
+                        foreach (AdvanceDTO advance in Model)
+                        {
+                            if (advance.AdvanceStatus == AdvanceStatus.Approved)
+                            {
+                                <tr data-toggle="tooltip" data-placement="top" title="@advance.Description">
+                                    <td>@advance.Amount @advance.CurrencyType</td>
+                                    <td>@advance.AdvanceType</td>
+                                    <td>@advance.ReceievedTime.ToShortDateString()</td>
+                                    <td>
+                                        <form asp-action="AdvanceDetail" asp-controller="Employee" method="post">
+                                            <input type="hidden" name="advance.Id" value="@advance.Id" />
+                                            <button type="submit" class="btn btn-gradient-info btn-sm">See Details</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                
+                            }
+                        }
+                    }
+                }
+            </tbody>
+            
+        </table>
+    </div>
+    <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
+        <table class="table">
+            <thead>
+                @if (anyDenied == true)
+                {
+                    <tr>
+
+
+                        <th>Amount</th>
+                        <th>Advance Type</th>
+                        <th>Receieved Time</th>
+                    </tr>
+                }
+                else
+                {
+                    <tr>There is no denied advance</tr>
+                }
+            </thead>
+            <tbody>
+                @{
+                    if (anyDenied == true)
+                    {
+                        foreach (AdvanceDTO advance in Model)
+                        {
+                            if (advance.AdvanceStatus == AdvanceStatus.Denied)
+                            {
+                                <tr data-toggle="tooltip" data-placement="top" title="@advance.Description">
+                                    <td>@advance.Amount @advance.CurrencyType</td>
+                                    <td>@advance.AdvanceType</td>
+                                    <td>@advance.ReceievedTime.ToShortDateString()</td>
+                                    <td>
+                                        <form asp-action="AdvanceDetail" asp-controller="Employee" method="post">
+                                            <input type="hidden" name="advance.Id" value="@advance.Id" />
+                                            <button type="submit" class="btn btn-gradient-info btn-sm">See Details</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#myTab a').on('click', function (e) {
+            e.preventDefault();
+            $(this).tab('show');
+        });
+    });
+
+    $(document).ready(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+</script>

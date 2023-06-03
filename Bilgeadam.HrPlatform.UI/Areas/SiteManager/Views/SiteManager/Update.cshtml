@@ -1,0 +1,78 @@
+﻿@using Bilgeadam.HrPlatform.Entities.Entities;
+@using Bilgeadam.HrPlatform.Entities.Enums;
+@model AppUser
+
+@{
+    ViewData["Title"] = "Detail";
+    Layout = "~/Views/Shared/_MyLayout.cshtml";
+}
+@functions {
+    public string FormatliTelefonNumarasi(string telefonNumarasi)
+    {
+        if (telefonNumarasi.Length != 10)
+        {
+            // Telefon numarası 10 haneli olmalıdır. İsteğe göre hata kontrolü yapabilirsiniz.
+            return telefonNumarasi;
+        }
+
+        return string.Format("({0}) {1} {2} {3}",
+        telefonNumarasi.Substring(0, 3),
+        telefonNumarasi.Substring(3, 3),
+        telefonNumarasi.Substring(6, 2),
+        telefonNumarasi.Substring(8, 2));
+    }
+}
+
+<hr />
+<div class="row">
+    <form asp-action="Update" method="post" enctype="multipart/form-data">
+        <div class="col-md-4">
+            @{
+                if (Model.ProfilePhoto != null)
+                {
+                    <div class="form-group">
+                        @{
+                            string base64String = Convert.ToBase64String(Model.ProfilePhoto);
+                        }
+                        <img class="rounded-circle" src="data:image/jpeg;base64,@(base64String)" alt="Profile Photo" style="width: 100px; height: 100px; object-fit:cover;" />
+                    </div>
+                }
+                else
+                {
+                    <div class="form-group">
+                        @{
+                            if (Model.Gender == "Male")
+                            {
+                                <img class="rounded-circle" src="~/Content/assets/images/faces/default.jpg" alt="Profile Photo" style="width: 100px; height: 100px; object-fit:cover;" />
+                            }
+                            else
+                            {
+                                <img class="rounded-circle" src="~/Content/assets/images/faces/defaultwomen.jpg" alt="Profile Photo" style="width: 100px; height: 100px; object-fit:cover;" />
+                            }
+                        }
+                    </div>
+                }
+            }
+            <div class="form-group">
+                <input type="file" name="photo" accept=".jpg, .jpeg, .png" />
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label class="control-label">Address</label>
+                <input asp-for="Address" class="form-control" />
+                <span asp-validation-for="Address" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Phone</label>
+                <input asp-for="PhoneNumber" class="form-control" placeholder="(***) *** ** **" />
+                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <input type="submit" value="Save Changes" class="btn btn-primary" />
+        </div>
+        <input asp-for="Id" class="d-none" />
+    </form>
+</div>
